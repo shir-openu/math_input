@@ -56,7 +56,6 @@
   .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ring);background:var(--field);padding:6px 10px;border-radius:999px;font-size:.9rem}
   .btn{cursor:pointer;background:var(--field);border:1px solid var(--ring);color:var(--ink);padding:8px 12px;border-radius:10px}
   .btn:hover{border-color:var(--accent)}
-  .badge{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--ring);background:var(--field);font-size:.8rem;color:var(--muted)}
 
   .status{font-size:.9rem;margin-top:6px;text-align:right}
   .status.ok{color:var(--ok)} .status.bad{color:var(--bad)}
@@ -68,7 +67,7 @@
   .hint{color:var(--muted);font-size:.9rem;margin-top:8px}
   .monospace{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
   select{background:var(--field);color:var(--ink);border:1px solid var(--ring);border-radius:10px;padding:6px 8px}
-  .debug{background:var(--field);border:1px solid var(--ring);border-radius:8px;padding:8px;margin-top:8px;font-family:monospace;font-size:0.85rem;direction:ltr;text-align:left;white-space:pre-wrap}
+  .debug{display:none}
 </style>
 </head>
 <body>
@@ -102,8 +101,6 @@ y = C_1 e^{2x}\sin x + C_2 e^{2x}\cos x + x^{2} - 3x + 5"></textarea>
               <option value="ode">מספק את המשוואה</option>
             </select>
           </span>
-          <span class="badge" id="modeBadge">זיהוי מצב  auto</span>
-          <span class="pill"><input type="checkbox" id="showDebug"><label for="showDebug" style="margin:0">הצגת debug</label></span>
         </div>
 
         <div id="status" class="status"></div>
@@ -112,11 +109,10 @@ y = C_1 e^{2x}\sin x + C_2 e^{2x}\cos x + x^{2} - 3x + 5"></textarea>
         <div id="render" class="render"></div>
 
         <div id="checkMsg" class="status" style="margin-top:10px"></div>
-        <div id="debugInfo" class="debug" style="display:none"></div>
 
         <div class="hint">
-          • בדיקת נכונות פועלת בקלט Plain  
-          • הטקסט במסך אינו פתרון התרגיל אלא דוגמה לכתיבת משוואה ב-LaTeX  
+          • בדיקת נכונות פועלת בקלט Plain<br/>
+          • הטקסט במסך אינו פתרון התרגיל אלא דוגמה לכתיבת משוואה ב-LaTeX<br/>
           • הציגו קבועים באותיות גדולות לדוגמה: A, B, C, D, K או C_1, C_2, D_1, D_2 • ניתן להשתמש ב: C*exp(x), C*e^x, או Ce^x
         </div>
       </section>
@@ -145,7 +141,6 @@ if (!window.exerciseInitialized) {
     const btnClear = document.getElementById('btnClear');
     const btnCheck = document.getElementById('btnCheck');
     const checkModeEl = document.getElementById('checkMode');
-    const showDebugEl = document.getElementById('showDebug');
 
     // ===== utils =====
     function sanitizeBasic(s){ return (s||'').replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069]/g,'').trim() }
@@ -184,13 +179,6 @@ if (!window.exerciseInitialized) {
       el.className = `status ${cls||''}`;
       el.textContent = (msg||'') + (cls==='ok' ? '  @ open university' : '');
     }
-    function setModeBadge(text){ document.getElementById('modeBadge').textContent = `זיהוי מצב  ${text}` }
-    function setCheckMsg(msg, cls){ const el=document.getElementById('checkMsg'); el.className=`status ${cls||''}`; el.textContent=msg||'' }
-    function setDebugInfo(msg){
-      const el = document.getElementById('debugInfo');
-      el.style.display = showDebugEl.checked && msg ? 'block' : 'none';
-      if (showDebugEl.checked && msg) el.textContent = msg;
-    }
 
     async function renderLatexTo(containerId, latex, display=true){
       const el = document.getElementById(containerId);
@@ -204,9 +192,8 @@ if (!window.exerciseInitialized) {
     let debTimer=null; function debounce(fn,ms=180){ clearTimeout(debTimer); debTimer=setTimeout(fn,ms) }
     async function process(){
       const raw0 = inputEl.value, raw = sanitizeBasic(raw0);
-      if(!raw){ document.getElementById('render').innerHTML=''; setStatus('',''); setModeBadge('auto'); return }
+      if(!raw){ document.getElementById('render').innerHTML=''; setStatus('',''); return }
       const forced = forceLatexEl.checked, latexMode = forced || looksLikeLatex(raw);
-      setModeBadge(latexMode ? (forced ? 'LaTeX כפוי' : 'LaTeX זוהה') : 'Plain זוהה');
 
       try{
         if(latexMode){
@@ -257,38 +244,18 @@ ${escapeHtml(raw)}</div>`;
     function checkGeneralSolution(userRaw){
       const userSan = sanitizeBasic(userRaw);
       const user = normalizeToPlain(userSan);
-      if(!user){ setDebugInfo('קלט ריק לאחר נרמול'); return false }
-
-      let dbg = `קלט מקורי  ${userSan}\nקלט מנורמל  ${user}\n\n`;
+      if(!user){ return false }
 
       try{
         const g = math.simplify(`(${user}) - (${basePart})`);
-        dbg += `g = user - base = ${g.toString()}\n`;
-
         const h = math.simplify(`(${g.toString()}) / (${fundamental})`);
-        dbg += `h = g / exp(x) = ${h.toString()}\n`;
-
         const hStr = h.toString();
         const hNode = math.parse(hStr);
-        const depX = dependsOnX(hNode);
-        dbg += `h תלוי ב x  ${depX}\n`;
-        if(depX){ setDebugInfo(dbg + 'h תלוי ב x'); return false }
-
-        const isZero = trySymbolicZero(hStr); // רק סימבולי
-        dbg += `h == 0  ${isZero}\n`;
-        if(isZero){ setDebugInfo(dbg + 'פתרון פרטי בלבד'); return false }
-
-        const hasParam = hasFreeParamSymbolFromNode(hNode);
-        dbg += `קיים פרמטר חופשי  ${hasParam}\n`;
-        if(!hasParam){ setDebugInfo(dbg + 'אין פרמטר חופשי'); return false }
-
-        setDebugInfo(dbg + 'פתרון כללי תקין');
+        if (dependsOnX(hNode)) return false;     // חייב להיות קבוע
+        if (trySymbolicZero(hStr)) return false; // לא פתרון פרטי
+        if (!hasFreeParamSymbolFromNode(hNode)) return false; // חייב להיות פרמטר חופשי
         return true;
-
-      }catch(err){
-        setDebugInfo(dbg + `שגיאה  ${err.message}`);
-        return false;
-      }
+      }catch{ return false }
     }
 
     function checkSatisfiesODE(userRaw){
@@ -302,7 +269,6 @@ ${escapeHtml(raw)}</div>`;
     }
 
     let correctExprPlain = "x + 1";
-    function setCorrectAnswer(exprPlain){ correctExprPlain = sanitizeBasic(exprPlain||'') }
     function checkExact(userRaw){
       const user = normalizeToPlain(userRaw);
       if(!user || !correctExprPlain) return false;
@@ -312,18 +278,12 @@ ${escapeHtml(raw)}</div>`;
     // ===== events =====
     inputEl.addEventListener('input', ()=>debounce(process,120));
     forceLatexEl.addEventListener('change', process);
-    showDebugEl.addEventListener('change', ()=>{
-      const m = document.getElementById('debugInfo').textContent;
-      setDebugInfo(m);
-    });
 
     btnClear.addEventListener('click', ()=>{
       inputEl.value='';
       document.getElementById('render').innerHTML='';
-      setStatus('','');
-      setModeBadge('auto');
-      setCheckMsg('','');
-      setDebugInfo('');
+      setStatus('');
+      document.getElementById('checkMsg').textContent='';
       inputEl.focus();
     });
 
@@ -331,15 +291,20 @@ ${escapeHtml(raw)}</div>`;
       const raw0 = inputEl.value;
       const raw = sanitizeBasic(raw0);
       const latexMode = looksLikeLatex(raw) && !forceLatexEl.checked;
-      if(latexMode){ setCheckMsg('בדיקת נכונות פועלת בקלט Plain','bad'); setDebugInfo(''); return }
-
+      if(latexMode){
+        document.getElementById('checkMsg').className = 'status bad';
+        document.getElementById('checkMsg').textContent = 'בדיקת נכונות פועלת בקלט Plain';
+        return;
+      }
       const mode = checkModeEl.value;
       let ok=false;
       if(mode==='general') ok=checkGeneralSolution(raw0);
       else if(mode==='ode') ok=checkSatisfiesODE(raw0);
       else ok=checkExact(raw0);
 
-      setCheckMsg(ok ? 'תשובה נכונה' : 'תשובה לא נכונה', ok?'ok':'bad');
+      const el = document.getElementById('checkMsg');
+      el.className = 'status ' + (ok?'ok':'bad');
+      el.textContent = ok ? 'תשובה נכונה' : 'תשובה לא נכונה';
     });
 
     // ===== שאלה ותצוגת התחלה =====
@@ -349,8 +314,6 @@ ${escapeHtml(raw)}</div>`;
     }
 
     setProblem(String.raw`y' = y - x\quad \text{מצאו את הפתרון הכללי}`);
-
-    // דוגמה LaTeX בשדה הקלט
     inputEl.value = String.raw`y = C_1 e^{2x}\sin x + C_2 e^{2x}\cos x + x^{2} - 3x + 5`;
     process();
   });
