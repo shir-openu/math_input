@@ -31,162 +31,44 @@
   *{box-sizing:border-box}
   html,body{height:100%;direction:rtl}
   body{
-    margin:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family:'Segoe UI','Tahoma','Arial','David','FrankRuehl',serif;
-    direction:rtl;
-    text-align:right;
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:'Segoe UI','Tahoma','Arial','David','FrankRuehl',serif;text-align:right;
   }
-  .wrap{
-    max-width:1200px;
-    margin:0 auto;
-    padding:22px;
-    direction:rtl;
-    text-align:right;
-  }
-  h1{
-    font-size:1.35rem;
-    margin:0 0 16px;
-    direction:rtl;
-    text-align:right;
-  }
+  .wrap{max-width:1200px;margin:0 auto;padding:22px}
+  h1{font-size:1.35rem;margin:0 0 16px}
 
   .grid{display:grid;grid-template-columns:1fr 1.2fr;gap:16px}
   @media (max-width:920px){.grid{grid-template-columns:1fr}}
 
-  .card{
-    background:var(--panel);
-    border:1px solid var(--ring);
-    border-radius:14px;
-    padding:14px 16px;
-    direction:rtl;
-  }
-  .section-title{
-    font-size:1.05rem;
-    margin:0 0 10px;
-    color:var(--ink);
-    direction:rtl;
-    text-align:right;
-  }
+  .card{background:var(--panel);border:1px solid var(--ring);border-radius:14px;padding:14px 16px}
+  .section-title{font-size:1.05rem;margin:0 0 10px;color:var(--ink)}
 
-  label{
-    font-size:.92rem;
-    color:var(--muted);
-    direction:rtl;
-    display:block;
-  }
+  label{font-size:.92rem;color:var(--muted);display:block}
   textarea{
-    width:100%;
-    background:var(--field);
-    color:var(--ink);
-    border:1px solid var(--ring);
-    border-radius:12px;
-    padding:10px 12px;
-    font-size:1rem;
-    line-height:1.5;
-    outline:none;
-    direction:ltr;
-    text-align:left;
-    font-family:monospace;
+    width:100%;background:var(--field);color:var(--ink);
+    border:1px solid var(--ring);border-radius:12px;
+    padding:10px 12px;font-size:1rem;line-height:1.5;outline:none;
+    direction:ltr;text-align:left;font-family:monospace;
   }
   textarea:focus{border-color:var(--accent)}
 
-  .controls{
-    display:flex;
-    gap:10px;
-    align-items:center;
-    flex-wrap:wrap;
-    margin-top:8px;
-    direction:rtl;
-    justify-content:flex-start;
-  }
-  .pill{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    border:1px solid var(--ring);
-    background:var(--field);
-    padding:6px 10px;
-    border-radius:999px;
-    font-size:.9rem;
-    direction:rtl;
-  }
-  .btn{
-    cursor:pointer;
-    background:var(--field);
-    border:1px solid var(--ring);
-    color:var(--ink);
-    padding:8px 12px;
-    border-radius:10px;
-  }
+  .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px;justify-content:flex-start}
+  .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ring);background:var(--field);padding:6px 10px;border-radius:999px;font-size:.9rem}
+  .btn{cursor:pointer;background:var(--field);border:1px solid var(--ring);color:var(--ink);padding:8px 12px;border-radius:10px}
   .btn:hover{border-color:var(--accent)}
-  .badge{
-    display:inline-block;
-    padding:2px 8px;
-    border-radius:999px;
-    border:1px solid var(--ring);
-    background:var(--field);
-    font-size:.8rem;
-    color:var(--muted);
-  }
+  .badge{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--ring);background:var(--field);font-size:.8rem;color:var(--muted)}
 
-  .status{
-    font-size:.9rem;
-    margin-top:6px;
-    direction:rtl;
-    text-align:right;
-  }
-  .status.ok{color:var(--ok)} 
-  .status.bad{color:var(--bad)}
+  .status{font-size:.9rem;margin-top:6px;text-align:right}
+  .status.ok{color:var(--ok)} .status.bad{color:var(--bad)}
 
   .render{
-    background:#0b1020;
-    border:1px dashed #243047;
-    border-radius:12px;
-    padding:14px 16px;
-    min-height:96px;
-    overflow:auto;
-    direction:ltr;
-    text-align:center;
+    background:#0b1020;border:1px dashed #243047;border-radius:12px;
+    padding:14px 16px;min-height:96px;overflow:auto;direction:ltr;text-align:center;
   }
-  .hint{
-    color:var(--muted);
-    font-size:.9rem;
-    margin-top:8px;
-    direction:rtl;
-    text-align:right;
-  }
-  .monospace{
-    font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-  }
-  select{
-    background:var(--field);
-    color:var(--ink);
-    border:1px solid var(--ring);
-    border-radius:10px;
-    padding:6px 8px;
-  }
-
-  .debug{
-    background:var(--field);
-    border:1px solid var(--ring);
-    border-radius:8px;
-    padding:8px;
-    margin-top:8px;
-    font-family:monospace;
-    font-size:0.85rem;
-    direction:ltr;
-    text-align:left;
-    white-space:pre-wrap;
-  }
-  
-  /* עברית מחוזקת */
-  body, h1, .section-title, label, .pill, .status, .hint, .btn {
-    font-family: 'Segoe UI', 'Tahoma', 'Arial Hebrew', 'David', 'FrankRuehl', sans-serif !important;
-    direction: rtl !important;
-    text-align: right !important;
-  }
+  .hint{color:var(--muted);font-size:.9rem;margin-top:8px}
+  .monospace{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+  select{background:var(--field);color:var(--ink);border:1px solid var(--ring);border-radius:10px;padding:6px 8px}
+  .debug{background:var(--field);border:1px solid var(--ring);border-radius:8px;padding:8px;margin-top:8px;font-family:monospace;font-size:0.85rem;direction:ltr;text-align:left;white-space:pre-wrap}
 </style>
 </head>
 <body>
@@ -194,19 +76,20 @@
     <h1>תרגיל</h1>
 
     <div class="grid">
+      <!-- ימין: השאלה -->
       <aside class="card">
         <div class="section-title">השאלה</div>
         <div id="problemRender" class="render"></div>
       </aside>
 
+      <!-- שמאל: תשובת הסטודנטים -->
       <section class="card">
         <div class="section-title">הזינו כאן את התשובה הסופית</div>
 
         <label for="inputRaw">קלט Plain או LaTeX</label>
-        <textarea id="inputRaw" rows="6" placeholder="דוגמאות:
-Plain:  y = x + 1 + C*exp(x)
-Plain:  y = x + 1 + C*e^x  
-LaTeX:  y = x + 1 + C e^{x}"></textarea>
+        <textarea id="inputRaw" rows="6"
+placeholder="דוגמה ב-LaTeX
+y = C_1 e^{2x}\sin x + C_2 e^{2x}\cos x + x^{2} - 3x + 5"></textarea>
 
         <div class="controls">
           <span class="pill"><input type="checkbox" id="forceLatex"><label for="forceLatex" style="margin:0">כפיית מצב LaTeX</label></span>
@@ -219,7 +102,7 @@ LaTeX:  y = x + 1 + C e^{x}"></textarea>
               <option value="ode">מספק את המשוואה</option>
             </select>
           </span>
-          <span class="badge" id="modeBadge">זיהוי מצב: auto</span>
+          <span class="badge" id="modeBadge">זיהוי מצב  auto</span>
           <span class="pill"><input type="checkbox" id="showDebug"><label for="showDebug" style="margin:0">הצגת debug</label></span>
         </div>
 
@@ -233,38 +116,30 @@ LaTeX:  y = x + 1 + C e^{x}"></textarea>
 
         <div class="hint">
           • בדיקת נכונות פועלת בקלט Plain  
-          • "פתרון כללי" לדוגמה כאן: \(y = x + 1 + C e^{x}\)  
-          • ניתן להשתמש ב: C*exp(x), C*e^x, או Ce^x
-          • תמיכה בקבועים: A, B, C, D, K וכן C_1, C_2, D_1, D_2 וכו'
-          • אין הצגת פתרון אמיתי במסך
+          • הטקסט במסך אינו פתרון התרגיל אלא דוגמה לכתיבת משוואה ב-LaTeX  
+          • הציגו קבועים באותיות גדולות לדוגמה: A, B, C, D, K או C_1, C_2, D_1, D_2 • ניתן להשתמש ב: C*exp(x), C*e^x, או Ce^x
         </div>
       </section>
     </div>
   </div>
 
 <script>
-// הגנה מפני ריצה כפולה
+// הגנה מריצה כפולה
 if (!window.exerciseInitialized) {
   window.exerciseInitialized = true;
-  
-  // המתנה לטעינת כל הסקריפטים
-  function waitForLibraries(callback) {
-    let attempts = 0;
-    function check() {
-      if (typeof math !== 'undefined' && window.MathJax) {
-        callback();
-      } else if (attempts < 100) {
-        attempts++;
-        setTimeout(check, 50);
-      } else {
-        console.error('Libraries failed to load');
-      }
-    }
-    check();
+
+  function waitForLibraries(cb){
+    let tries=0;
+    (function check(){
+      if (typeof math !== 'undefined' && window.MathJax) cb();
+      else if(tries++<100) setTimeout(check,50);
+      else console.error('Libraries failed to load');
+    })();
   }
 
-  waitForLibraries(function() {
-    // ===== Utils =====
+  waitForLibraries(function(){
+
+    // ===== refs =====
     const inputEl = document.getElementById('inputRaw');
     const forceLatexEl = document.getElementById('forceLatex');
     const btnClear = document.getElementById('btnClear');
@@ -272,21 +147,22 @@ if (!window.exerciseInitialized) {
     const checkModeEl = document.getElementById('checkMode');
     const showDebugEl = document.getElementById('showDebug');
 
-    function sanitizeBasic(s) {
-      return (s || '').replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, '').trim();
-    }
-    
-    function looksLikeLatex(s) {
-      return /\\[a-zA-Z]+|\\\[|\\\]|\\\(|\\\)|\$(?!\s*$)|\\int|\\sum|\\frac|\\sqrt/.test(s);
-    }
-    
-    function escapeHtml(str) {
-      return (str || '').replace(/[&<>"']/g, m => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-      }[m]));
+    // ===== utils =====
+    function sanitizeBasic(s){ return (s||'').replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069]/g,'').trim() }
+    function looksLikeLatex(s){ return /\\[a-zA-Z]+|\\\[|\\\]|\\\(|\\\)|\$(?!\s*$)|\\int|\\sum|\\frac|\\sqrt/.test(s) }
+    function escapeHtml(str){ return (str||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) }
+
+    // מזהים עם אותיות/ספרות/קו-תחתון וכפל סמוי
+    function insertImplicitMult(s){
+      const id = '([A-Za-z](?:[A-Za-z0-9_]*))';
+      s = s.replace(new RegExp(id + '\\s*(?=\\()', 'g'), '$1*');                          // var( → var*(
+      s = s.replace(new RegExp(id + '\\s*(?=\\b[xX]\\b)', 'g'), '$1*');                  // var x → var*x
+      s = s.replace(new RegExp(id + '\\s*e\\s*\\^', 'g'), '$1*e^');                       // var e^x → var*e^x
+      s = s.replace(new RegExp(id + '\\s*(?=\\b(?:sin|cos|tan|asin|acos|atan|exp|log|ln|sqrt|abs)\\b)', 'g'), '$1*'); // var sin → var*sin
+      return s;
     }
 
-    function convertMathNotation(s) {
+    function convertMathNotation(s){
       s = s.replace(/\be\s*\^\s*\(/g, 'exp(');
       s = s.replace(/\be\s*\^\s*([a-zA-Z_]\w*|[0-9]+)/g, 'exp($1)');
       s = s.replace(/\be\s*\^\s*\{([^}]+)\}/g, 'exp($1)');
@@ -294,245 +170,188 @@ if (!window.exerciseInitialized) {
       return s;
     }
 
-    function insertImplicitMult(s) {
-      // קבועים בסיסיים - אותיות בודדות
-      s = s.replace(/([A-Z])(?=\s*(?:x\b|\())/g, '$1*');
-      s = s.replace(/([A-Z])(?=\s*(?:e\b))/g, '$1*');
-      s = s.replace(/([A-Z])(?=\s*(?:sin|cos|tan|exp|log|ln|sqrt)\b)/g, '$1*');
-      
-      // קבועים עם אינדקסים כמו C_1, D_2
-      s = s.replace(/([A-Z])(_[0-9]+)(?=\s*(?:x\b|\())/g, '$1$2*');
-      s = s.replace(/([A-Z])(_[0-9]+)(?=\s*(?:e\b))/g, '$1$2*');
-      s = s.replace(/([A-Z])(_[0-9]+)(?=\s*(?:sin|cos|tan|exp|log|ln|sqrt)\b)/g, '$1$2*');
-      
-      return s;
-    }
-
-    function normalizeToPlain(s) {
+    function normalizeToPlain(s){
       let t = sanitizeBasic(s);
-      t = t.replace(/^\s*[yY]\s*(\(\s*x\s*\))?\s*=\s*/, ''); // strip Y=
-      t = t.replace(/(\d),(\d)/g, '$1.$2'); // comma to dot
+      t = t.replace(/^\s*[yY]\s*(\(\s*x\s*\))?\s*=\s*/, '');
+      t = t.replace(/(\d),(\d)/g,'$1.$2');
       t = insertImplicitMult(t);
       t = convertMathNotation(t);
       return t;
     }
 
-    function setStatus(msg, cls) {
+    function setStatus(msg, cls){
       const el = document.getElementById('status');
-      el.className = `status ${cls || ''}`;
-      el.textContent = (msg || '') + (cls === 'ok' ? '  @ open university' : '');
+      el.className = `status ${cls||''}`;
+      el.textContent = (msg||'') + (cls==='ok' ? '  @ open university' : '');
     }
-
-    function setModeBadge(text) {
-      document.getElementById('modeBadge').textContent = `זיהוי מצב: ${text}`;
-    }
-
-    function setCheckMsg(msg, cls) {
-      const el = document.getElementById('checkMsg');
-      el.className = `status ${cls || ''}`;
-      el.textContent = msg || '';
-    }
-
-    function setDebugInfo(msg) {
+    function setModeBadge(text){ document.getElementById('modeBadge').textContent = `זיהוי מצב  ${text}` }
+    function setCheckMsg(msg, cls){ const el=document.getElementById('checkMsg'); el.className=`status ${cls||''}`; el.textContent=msg||'' }
+    function setDebugInfo(msg){
       const el = document.getElementById('debugInfo');
       el.style.display = showDebugEl.checked && msg ? 'block' : 'none';
-      if (showDebugEl.checked && msg) {
-        el.textContent = msg;
-      }
+      if (showDebugEl.checked && msg) el.textContent = msg;
     }
 
-    async function renderLatexTo(containerId, latex, display = true) {
+    async function renderLatexTo(containerId, latex, display=true){
       const el = document.getElementById(containerId);
       el.innerHTML = display ? `\\[ ${latex} \\]` : `\\(${latex}\\)`;
-      if (window.MathJax?.typesetPromise) {
-        try {
-          await MathJax.typesetPromise([el]);
-        } catch {
-          el.innerHTML = `<div class="monospace">${escapeHtml(latex)}</div>`;
-        }
+      if (window.MathJax?.typesetPromise){
+        try{ await MathJax.typesetPromise([el]) }catch{ el.innerHTML = `<div class="monospace">${escapeHtml(latex)}</div>` }
       }
     }
 
-    let debTimer = null;
-    function debounce(fn, ms = 180) {
-      clearTimeout(debTimer);
-      debTimer = setTimeout(fn, ms);
-    }
-
-    async function process() {
-      const raw0 = inputEl.value;
-      const raw = sanitizeBasic(raw0);
-      if (!raw) {
-        document.getElementById('render').innerHTML = '';
-        setStatus('', '');
-        setModeBadge('auto');
-        return;
-      }
-
-      const forced = forceLatexEl.checked;
-      const latexMode = forced || looksLikeLatex(raw);
+    // ===== display processing =====
+    let debTimer=null; function debounce(fn,ms=180){ clearTimeout(debTimer); debTimer=setTimeout(fn,ms) }
+    async function process(){
+      const raw0 = inputEl.value, raw = sanitizeBasic(raw0);
+      if(!raw){ document.getElementById('render').innerHTML=''; setStatus('',''); setModeBadge('auto'); return }
+      const forced = forceLatexEl.checked, latexMode = forced || looksLikeLatex(raw);
       setModeBadge(latexMode ? (forced ? 'LaTeX כפוי' : 'LaTeX זוהה') : 'Plain זוהה');
 
-      try {
-        if (latexMode) {
+      try{
+        if(latexMode){
           await renderLatexTo('render', raw, true);
           setStatus('מעובד במצב LaTeX', 'ok');
-        } else {
+        }else{
           const plain = normalizeToPlain(raw);
           const node = math.parse(plain);
-          const latex = node.toTex({ parenthesis: 'keep', implicit: 'show' });
+          const latex = node.toTex({ parenthesis:'keep', implicit:'show' });
           await renderLatexTo('render', latex, true);
           setStatus('מעובד במצב Plain → LaTeX באמצעות mathjs', 'ok');
         }
-      } catch (err) {
-        document.getElementById('render').innerHTML = 
-          `<div class="monospace">שגיאה בעיבוד\n${escapeHtml(err?.message || String(err))}\n\nקלט\n${escapeHtml(raw)}</div>`;
+      }catch(err){
+        document.getElementById('render').innerHTML =
+          `<div class="monospace">שגיאה בעיבוד
+${escapeHtml(err?.message || String(err))}
+
+קלט
+${escapeHtml(raw)}</div>`;
         setStatus('שגיאה בעיבוד — לבדוק תחביר', 'bad');
       }
     }
 
-    // Checker functions
+    // ===== checker =====
     const basePart = "x + 1";
     const fundamental = "exp(x)";
 
-    function dependsOnX(node) {
-      let dep = false;
-      node.traverse(n => {
-        if (n.isSymbolNode && n.name === 'x') dep = true;
-      });
-      return dep;
+    function dependsOnX(node){
+      let dep=false; node.traverse(n=>{ if(n.isSymbolNode && n.name==='x') dep=true }); return dep
     }
-
-    function hasFreeParamSymbolFromNode(node) {
-      let has = false;
-      node.traverse(n => {
-        if (n.isSymbolNode) {
-          const nm = n.name;
-          // כל אות שאינה x, e, pi נחשבת פרמטר חופשי
-          if (nm !== 'x' && nm !== 'e' && nm !== 'pi') {
-            // גם אם יש אינדקס כמו C_1, D_2 - זה עדיין פרמטר חופשי
-            has = true;
-          }
+    function hasFreeParamSymbolFromNode(node){
+      let has=false;
+      node.traverse(n=>{
+        if(n.isSymbolNode){
+          const nm=n.name;
+          if(nm!=='x' && nm!=='e' && nm!=='pi') has=true;
         }
       });
-      return has;
+      return has
+    }
+    function trySymbolicZero(expr){
+      try{
+        const simp = math.simplify(expr).toString().replace(/\s+/g,'');
+        return simp === '0' || /^0(\*.*)?$/.test(simp)
+      }catch{ return false }
     }
 
-    function trySymbolicZero(expr) {
-      try {
-        const simp = math.simplify(expr);
-        const simpStr = simp.toString().replace(/\s+/g, '');
-        return simpStr === '0' || /^0(\*.*)?$/.test(simpStr);
-      } catch {
-        return false;
-      }
-    }
+    function checkGeneralSolution(userRaw){
+      const userSan = sanitizeBasic(userRaw);
+      const user = normalizeToPlain(userSan);
+      if(!user){ setDebugInfo('קלט ריק לאחר נרמול'); return false }
 
-    function checkGeneralSolution(userRaw) {
-      const userRawSan = sanitizeBasic(userRaw);
-      const user = normalizeToPlain(userRawSan);
-      
-      if (!user) {
-        setDebugInfo("כשלון: קלט ריק לאחר נרמול");
-        return false;
-      }
+      let dbg = `קלט מקורי  ${userSan}\nקלט מנורמל  ${user}\n\n`;
 
-      let debugMsg = `קלט מקורי: ${userRawSan}\nקלט מנורמל: ${user}\n\n`;
-
-      try {
+      try{
         const g = math.simplify(`(${user}) - (${basePart})`);
-        debugMsg += `שלב 1: g = user - basePart = ${g.toString()}\n\n`;
+        dbg += `g = user - base = ${g.toString()}\n`;
 
         const h = math.simplify(`(${g.toString()}) / (${fundamental})`);
-        debugMsg += `שלב 2: h = g / fundamental = ${h.toString()}\n\n`;
+        dbg += `h = g / exp(x) = ${h.toString()}\n`;
 
-        const hNode = math.parse(h.toString());
-        const dependsX = dependsOnX(hNode);
-        debugMsg += `שלב 3: h תלוי ב-x? ${dependsX}\n`;
+        const hStr = h.toString();
+        const hNode = math.parse(hStr);
+        const depX = dependsOnX(hNode);
+        dbg += `h תלוי ב x  ${depX}\n`;
+        if(depX){ setDebugInfo(dbg + 'h תלוי ב x'); return false }
 
-        if (dependsX) {
-          setDebugInfo(debugMsg + "\nתוצאה: כשלון - h תלוי ב-x");
-          return false;
-        }
+        const isZero = trySymbolicZero(hStr); // רק סימבולי
+        dbg += `h == 0  ${isZero}\n`;
+        if(isZero){ setDebugInfo(dbg + 'פתרון פרטי בלבד'); return false }
 
-        const isZero = trySymbolicZero(h.toString());
-        debugMsg += `\nשלב 4: h == 0? ${isZero}\n`;
+        const hasParam = hasFreeParamSymbolFromNode(hNode);
+        dbg += `קיים פרמטר חופשי  ${hasParam}\n`;
+        if(!hasParam){ setDebugInfo(dbg + 'אין פרמטר חופשי'); return false }
 
-        if (isZero) {
-          setDebugInfo(debugMsg + "\nתוצאה: כשלון - h = 0 (פתרון פרטי)");
-          return false;
-        }
-
-        const hasFreeParam = hasFreeParamSymbolFromNode(hNode);
-        debugMsg += `\nשלב 5: יש פרמטר חופשי? ${hasFreeParam}\n`;
-
-        if (!hasFreeParam) {
-          setDebugInfo(debugMsg + "\nתוצאה: כשלון - אין פרמטר חופשי");
-          return false;
-        }
-
-        setDebugInfo(debugMsg + "\nתוצאה: הצלחה! פתרון כללי תקין");
+        setDebugInfo(dbg + 'פתרון כללי תקין');
         return true;
 
-      } catch (err) {
-        setDebugInfo(debugMsg + `\nשגיאה: ${err.message}`);
+      }catch(err){
+        setDebugInfo(dbg + `שגיאה  ${err.message}`);
         return false;
       }
     }
 
-    // Event listeners
-    inputEl.addEventListener('input', () => debounce(process, 120));
+    function checkSatisfiesODE(userRaw){
+      const user = normalizeToPlain(userRaw);
+      if(!user) return false;
+      try{
+        const du = math.derivative(user,'x').toString();
+        const expr = `(${du}) - (${user}) + x`;
+        return trySymbolicZero(expr);
+      }catch{ return false }
+    }
+
+    let correctExprPlain = "x + 1";
+    function setCorrectAnswer(exprPlain){ correctExprPlain = sanitizeBasic(exprPlain||'') }
+    function checkExact(userRaw){
+      const user = normalizeToPlain(userRaw);
+      if(!user || !correctExprPlain) return false;
+      return trySymbolicZero(`(${user}) - (${correctExprPlain})`);
+    }
+
+    // ===== events =====
+    inputEl.addEventListener('input', ()=>debounce(process,120));
     forceLatexEl.addEventListener('change', process);
-    showDebugEl.addEventListener('change', () => {
-      const currentMsg = document.getElementById('debugInfo').textContent;
-      setDebugInfo(currentMsg);
+    showDebugEl.addEventListener('change', ()=>{
+      const m = document.getElementById('debugInfo').textContent;
+      setDebugInfo(m);
     });
 
-    btnClear.addEventListener('click', () => {
-      inputEl.value = '';
-      document.getElementById('render').innerHTML = '';
-      setStatus('', '');
+    btnClear.addEventListener('click', ()=>{
+      inputEl.value='';
+      document.getElementById('render').innerHTML='';
+      setStatus('','');
       setModeBadge('auto');
-      setCheckMsg('', '');
+      setCheckMsg('','');
       setDebugInfo('');
       inputEl.focus();
     });
 
-    btnCheck.addEventListener('click', () => {
+    btnCheck.addEventListener('click', ()=>{
       const raw0 = inputEl.value;
       const raw = sanitizeBasic(raw0);
       const latexMode = looksLikeLatex(raw) && !forceLatexEl.checked;
-
-      if (latexMode) {
-        setCheckMsg('בדיקת נכונות פועלת בקלט Plain', 'bad');
-        setDebugInfo('');
-        return;
-      }
+      if(latexMode){ setCheckMsg('בדיקת נכונות פועלת בקלט Plain','bad'); setDebugInfo(''); return }
 
       const mode = checkModeEl.value;
-      let ok = false;
-      if (mode === 'general') {
-        ok = checkGeneralSolution(raw0);
-      }
+      let ok=false;
+      if(mode==='general') ok=checkGeneralSolution(raw0);
+      else if(mode==='ode') ok=checkSatisfiesODE(raw0);
+      else ok=checkExact(raw0);
 
-      setCheckMsg(
-        ok ? 'התשובה נכונה' : 'התשובה אינה נכונה',
-        ok ? 'ok' : 'bad'
-      );
+      setCheckMsg(ok ? 'תשובה נכונה' : 'תשובה לא נכונה', ok?'ok':'bad');
     });
 
-    // Initialize
-    async function setProblem(textOrLatex, isLatex = true) {
-      if (isLatex) {
-        await renderLatexTo('problemRender', textOrLatex, true);
-      } else {
-        document.getElementById('problemRender').innerHTML = `<div>${escapeHtml(textOrLatex)}</div>`;
-      }
+    // ===== שאלה ותצוגת התחלה =====
+    async function setProblem(textOrLatex, isLatex=true){
+      if(isLatex) await renderLatexTo('problemRender', textOrLatex, true);
+      else document.getElementById('problemRender').innerHTML = `<div>${escapeHtml(textOrLatex)}</div>`;
     }
 
-    // Set up the problem and default input
     setProblem(String.raw`y' = y - x\quad \text{מצאו את הפתרון הכללי}`);
-    inputEl.value = "y = x + 1 + C*exp(x)";
+
+    // דוגמה LaTeX בשדה הקלט
+    inputEl.value = String.raw`y = C_1 e^{2x}\sin x + C_2 e^{2x}\cos x + x^{2} - 3x + 5`;
     process();
   });
 }
