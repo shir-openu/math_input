@@ -37,6 +37,16 @@
   .wrap{max-width:1200px;margin:0 auto;padding:22px}
   h1{font-size:1.35rem;margin:0 0 16px}
 
+  /* Tabs */
+  .tabs{display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap}
+  .tab-btn{
+    cursor:pointer; padding:8px 12px; border:1px solid var(--ring);
+    background:var(--field); color:var(--ink); border-radius:10px; font-size:.95rem;
+  }
+  .tab-btn[aria-selected="true"]{border-color:var(--accent)}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
+
   .grid{display:grid;grid-template-columns:1fr 1.2fr;gap:16px}
   @media (max-width:920px){.grid{grid-template-columns:1fr}}
 
@@ -64,260 +74,260 @@
     background:#0b1020;border:1px dashed #243047;border-radius:12px;
     padding:14px 16px;min-height:96px;overflow:auto;direction:ltr;text-align:center;
   }
-  .hint{color:var(--muted);font-size:.9rem;margin-top:8px}
-  .monospace{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+  .hint{color:var(--muted);font-size:.95rem;margin-top:8px;line-height:1.9}
+  .monospace{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Courier New",monospace}
   select{background:var(--field);color:var(--ink);border:1px solid var(--ring);border-radius:10px;padding:6px 8px}
-  .debug{display:none}
 </style>
 </head>
 <body>
   <div class="wrap">
     <h1>תרגיל</h1>
 
-    <div class="grid">
-      <!-- ימין: השאלה -->
-      <aside class="card">
-        <div class="section-title">השאלה</div>
-        <div id="problemRender" class="render"></div>
-      </aside>
+    <!-- Tabs header -->
+    <div class="tabs" role="tablist" aria-label="ניווט לשוניות">
+      <button class="tab-btn" role="tab" aria-selected="true" aria-controls="tab-ex" id="tabbtn-ex">תרגיל</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-hint" id="tabbtn-hint">רמז</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-sol" id="tabbtn-sol">הצגת הפתרון</button>
+    </div>
 
-      <!-- שמאל: תשובת הסטודנטים -->
-      <section class="card">
-        <div class="section-title">הזינו כאן את התשובה הסופית</div>
+    <!-- Panel: תרגיל -->
+    <section class="tab-panel active" id="tab-ex" role="tabpanel" aria-labelledby="tabbtn-ex">
+      <div class="grid">
+        <!-- ימין: השאלה -->
+        <aside class="card">
+          <div class="section-title">השאלה</div>
+          <div id="problemRender" class="render"></div>
+        </aside>
 
-        <label for="inputRaw">קלט Plain או LaTeX</label>
-        <textarea id="inputRaw" rows="6"
+        <!-- שמאל: תשובת הסטודנטים -->
+        <section class="card">
+          <div class="section-title">הזינו כאן את התשובה הסופית</div>
+
+          <label for="inputRaw">קלט Plain או LaTeX</label>
+          <textarea id="inputRaw" rows="6"
 placeholder="דוגמה ב-LaTeX
 y = C_1 e^{2x}\sin x + C_2 e^{2x}\cos x + x^{2} - 3x + 5"></textarea>
 
-        <div class="controls">
-          <span class="pill"><input type="checkbox" id="forceLatex"><label for="forceLatex" style="margin:0">כפיית מצב LaTeX</label></span>
-          <button class="btn" id="btnClear">ניקוי</button>
-          <button class="btn" id="btnCheck">בדיקת תשובה</button>
-          <span class="pill">מצב בדיקה
-            <select id="checkMode">
-              <option value="general" selected>פתרון כללי</option>
-              <option value="exact">ביטוי מדויק</option>
-              <option value="ode">מספק את המשוואה</option>
-            </select>
-          </span>
-        </div>
+          <div class="controls">
+            <span class="pill"><input type="checkbox" id="forceLatex"><label for="forceLatex" style="margin:0">כפיית מצב LaTeX</label></span>
+            <button class="btn" id="btnClear">ניקוי</button>
+            <button class="btn" id="btnCheck">בדיקת תשובה</button>
+            <span class="pill">מצב בדיקה
+              <select id="checkMode">
+                <option value="general" selected>פתרון כללי</option>
+                <option value="exact">ביטוי מדויק</option>
+                <option value="ode">מספק את המשוואה</option>
+              </select>
+            </span>
+          </div>
 
-        <div id="status" class="status"></div>
+          <div id="status" class="status"></div>
 
-        <label style="margin-top:10px;display:block">תצוגה</label>
-        <div id="render" class="render"></div>
+          <label style="margin-top:10px;display:block">תצוגה</label>
+          <div id="render" class="render"></div>
 
-        <div id="checkMsg" class="status" style="margin-top:10px"></div>
+          <div id="checkMsg" class="status" style="margin-top:10px"></div>
 
+          <div class="hint">
+            • בדיקת נכונות פועלת בקלט Plain<br/>
+            • הטקסט במסך אינו פתרון התרגיל אלא דוגמה לכתיבת משוואה ב-LaTeX<br/>
+            • הציגו קבועים באותיות גדולות לדוגמה: A, B, C, D, K או C_1, C_2, D_1, D_2 • ניתן להשתמש ב: C*exp(x), C*e^x, או Ce^x
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- Panel: רמז -->
+    <section class="tab-panel" id="tab-hint" role="tabpanel" aria-labelledby="tabbtn-hint">
+      <div class="card">
+        <div class="section-title">רמז</div>
         <div class="hint">
-          • בדיקת נכונות פועלת בקלט Plain<br/>
-          • הטקסט במסך אינו פתרון התרגיל אלא דוגמה לכתיבת משוואה ב-LaTeX<br/>
-          • הציגו קבועים באותיות גדולות לדוגמה: A, B, C, D, K או C_1, C_2, D_1, D_2 • ניתן להשתמש ב: C*exp(x), C*e^x, או Ce^x
+          זוהי משוואה לינארית אי־הומוגנית מסדר ראשון.<br/>
+          הביאו לצורה הבאה: \(y' - y = -x\).<br/>
+          השתמשו בגורם אינטגרציה: \(\mu(x)=e^{\int -1\,dx}=e^{-x}\).<br/>
+          הכפילו ב-\(e^{-x}\) וקבלו: \(\big(e^{-x}y\big)' = -x e^{-x}\).<br/>
+          שלבו וּבודדו את \(y\).
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
+
+    <!-- Panel: הצגת הפתרון -->
+    <section class="tab-panel" id="tab-sol" role="tabpanel" aria-labelledby="tabbtn-sol">
+      <div class="card">
+        <div class="section-title">שלד הפתרון</div>
+        <div class="render" id="solutionBox"></div>
+        <div class="hint" style="margin-top:10px">
+          \(y' - y = -x\). גורם אינטגרציה \(\mu=e^{-x}\):<br/>
+          \[
+             \big(e^{-x}y\big)' = -x e^{-x}
+             \quad\Rightarrow\quad
+             e^{-x}y = \int -x e^{-x}\,dx
+             = (x+1)e^{-x} + C
+          \]<br/>
+          הכפילו ב-\(e^{x}\): \(y = x + 1 + C e^{x}\).
+        </div>
+      </div>
+    </section>
+
   </div>
 
 <script>
-// הגנה מריצה כפולה
-if (!window.exerciseInitialized) {
-  window.exerciseInitialized = true;
+// ===== Tabs logic =====
+(function(){
+  const buttons = [...document.querySelectorAll('.tab-btn')];
+  const panels  = [...document.querySelectorAll('.tab-panel')];
+  function activate(id){
+    buttons.forEach(b=>b.setAttribute('aria-selected', String(b.getAttribute('aria-controls')===id)));
+    panels.forEach(p=>p.classList.toggle('active', p.id===id));
+    if (window.MathJax?.typesetPromise) MathJax.typesetPromise(panels.filter(p=>p.id===id));
+  }
+  buttons.forEach(btn=>{
+    btn.addEventListener('click', ()=>activate(btn.getAttribute('aria-controls')));
+  });
+})();
 
-  function waitForLibraries(cb){
-    let tries=0;
-    (function check(){
-      if (typeof math !== 'undefined' && window.MathJax) cb();
-      else if(tries++<100) setTimeout(check,50);
-      else console.error('Libraries failed to load');
-    })();
+// ===== Math/Render helpers =====
+function waitForLibraries(cb){
+  let tries=0;(function check(){
+    if (typeof math!=='undefined' && window.MathJax) cb();
+    else if(tries++<100) setTimeout(check,50);
+    else console.error('Libraries failed to load');
+  })();
+}
+async function renderLatexTo(containerId, latex, display=true){
+  const el = document.getElementById(containerId);
+  el.innerHTML = display ? `\\[ ${latex} \\]` : `\\(${latex}\\)`;
+  if (window.MathJax?.typesetPromise){
+    try{ await MathJax.typesetPromise([el]) }catch{ el.innerHTML = `<div class="monospace">${latex}</div>` }
+  }
+}
+
+waitForLibraries(function(){
+  // ===== refs =====
+  const inputEl = document.getElementById('inputRaw');
+  const forceLatexEl = document.getElementById('forceLatex');
+  const btnClear = document.getElementById('btnClear');
+  const btnCheck = document.getElementById('btnCheck');
+  const checkModeEl = document.getElementById('checkMode');
+
+  // ===== utils =====
+  function sanitizeBasic(s){ return (s||'').replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069]/g,'').trim() }
+  function looksLikeLatex(s){ return /\\[a-zA-Z]+|\\\[|\\\]|\\\(|\\\)|\$(?!\s*$)|\\int|\\sum|\\frac|\\sqrt/.test(s) }
+
+  function insertImplicitMult(s){
+    const id = '([A-Za-z](?:[A-Za-z0-9_]*))';
+    s = s.replace(new RegExp(id + '\\s*(?=\\()', 'g'), '$1*');
+    s = s.replace(new RegExp(id + '\\s*(?=\\b[xX]\\b)', 'g'), '$1*');
+    s = s.replace(new RegExp(id + '\\s*e\\s*\\^', 'g'), '$1*e^');
+    s = s.replace(new RegExp(id + '\\s*(?=\\b(?:sin|cos|tan|asin|acos|atan|exp|log|ln|sqrt|abs)\\b)', 'g'), '$1*');
+    return s;
+  }
+  function convertMathNotation(s){
+    s = s.replace(/\be\s*\^\s*\(/g, 'exp(');
+    s = s.replace(/\be\s*\^\s*([a-zA-Z_]\w*|[0-9]+)/g, 'exp($1)');
+    s = s.replace(/\be\s*\^\s*\{([^}]+)\}/g, 'exp($1)');
+    s = s.replace(/\^/g, '**');
+    return s;
+  }
+  function normalizeToPlain(s){
+    let t = sanitizeBasic(s);
+    t = t.replace(/^\s*[yY]\s*(\(\s*x\s*\))?\s*=\s*/, '');
+    t = t.replace(/(\d),(\d)/g,'$1.$2');
+    t = insertImplicitMult(t);
+    t = convertMathNotation(t);
+    return t;
   }
 
-  waitForLibraries(function(){
+  function setStatus(msg, cls){
+    const el = document.getElementById('status');
+    el.className = `status ${cls||''}`;
+    el.textContent = (msg||'') + (cls==='ok' ? '  @ open university' : '');
+  }
 
-    // ===== refs =====
-    const inputEl = document.getElementById('inputRaw');
-    const forceLatexEl = document.getElementById('forceLatex');
-    const btnClear = document.getElementById('btnClear');
-    const btnCheck = document.getElementById('btnCheck');
-    const checkModeEl = document.getElementById('checkMode');
-
-    // ===== utils =====
-    function sanitizeBasic(s){ return (s||'').replace(/[\u200E\u200F\u202A-\u202E\u2066-\u2069]/g,'').trim() }
-    function looksLikeLatex(s){ return /\\[a-zA-Z]+|\\\[|\\\]|\\\(|\\\)|\$(?!\s*$)|\\int|\\sum|\\frac|\\sqrt/.test(s) }
-    function escapeHtml(str){ return (str||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) }
-
-    // מזהים עם אותיות/ספרות/קו-תחתון וכפל סמוי
-    function insertImplicitMult(s){
-      const id = '([A-Za-z](?:[A-Za-z0-9_]*))';
-      s = s.replace(new RegExp(id + '\\s*(?=\\()', 'g'), '$1*');                          // var( → var*(
-      s = s.replace(new RegExp(id + '\\s*(?=\\b[xX]\\b)', 'g'), '$1*');                  // var x → var*x
-      s = s.replace(new RegExp(id + '\\s*e\\s*\\^', 'g'), '$1*e^');                       // var e^x → var*e^x
-      s = s.replace(new RegExp(id + '\\s*(?=\\b(?:sin|cos|tan|asin|acos|atan|exp|log|ln|sqrt|abs)\\b)', 'g'), '$1*'); // var sin → var*sin
-      return s;
-    }
-
-    function convertMathNotation(s){
-      s = s.replace(/\be\s*\^\s*\(/g, 'exp(');
-      s = s.replace(/\be\s*\^\s*([a-zA-Z_]\w*|[0-9]+)/g, 'exp($1)');
-      s = s.replace(/\be\s*\^\s*\{([^}]+)\}/g, 'exp($1)');
-      s = s.replace(/\^/g, '**');
-      return s;
-    }
-
-    function normalizeToPlain(s){
-      let t = sanitizeBasic(s);
-      t = t.replace(/^\s*[yY]\s*(\(\s*x\s*\))?\s*=\s*/, '');
-      t = t.replace(/(\d),(\d)/g,'$1.$2');
-      t = insertImplicitMult(t);
-      t = convertMathNotation(t);
-      return t;
-    }
-
-    function setStatus(msg, cls){
-      const el = document.getElementById('status');
-      el.className = `status ${cls||''}`;
-      el.textContent = (msg||'') + (cls==='ok' ? '  @ open university' : '');
-    }
-
-    async function renderLatexTo(containerId, latex, display=true){
-      const el = document.getElementById(containerId);
-      el.innerHTML = display ? `\\[ ${latex} \\]` : `\\(${latex}\\)`;
-      if (window.MathJax?.typesetPromise){
-        try{ await MathJax.typesetPromise([el]) }catch{ el.innerHTML = `<div class="monospace">${escapeHtml(latex)}</div>` }
-      }
-    }
-
-    // ===== display processing =====
-    let debTimer=null; function debounce(fn,ms=180){ clearTimeout(debTimer); debTimer=setTimeout(fn,ms) }
-    async function process(){
-      const raw0 = inputEl.value, raw = sanitizeBasic(raw0);
-      if(!raw){ document.getElementById('render').innerHTML=''; setStatus('',''); return }
-      const forced = forceLatexEl.checked, latexMode = forced || looksLikeLatex(raw);
-
-      try{
-        if(latexMode){
-          await renderLatexTo('render', raw, true);
-          setStatus('מעובד במצב LaTeX', 'ok');
-        }else{
-          const plain = normalizeToPlain(raw);
-          const node = math.parse(plain);
-          const latex = node.toTex({ parenthesis:'keep', implicit:'show' });
-          await renderLatexTo('render', latex, true);
-          setStatus('מעובד במצב Plain → LaTeX באמצעות mathjs', 'ok');
-        }
-      }catch(err){
-        document.getElementById('render').innerHTML =
-          `<div class="monospace">שגיאה בעיבוד
-${escapeHtml(err?.message || String(err))}
-
-קלט
-${escapeHtml(raw)}</div>`;
-        setStatus('שגיאה בעיבוד — לבדוק תחביר', 'bad');
-      }
-    }
-
-    // ===== checker =====
-    const basePart = "x + 1";
-    const fundamental = "exp(x)";
-
-    function dependsOnX(node){
-      let dep=false; node.traverse(n=>{ if(n.isSymbolNode && n.name==='x') dep=true }); return dep
-    }
-    function hasFreeParamSymbolFromNode(node){
-      let has=false;
-      node.traverse(n=>{
-        if(n.isSymbolNode){
-          const nm=n.name;
-          if(nm!=='x' && nm!=='e' && nm!=='pi') has=true;
-        }
-      });
-      return has
-    }
-    function trySymbolicZero(expr){
-      try{
-        const simp = math.simplify(expr).toString().replace(/\s+/g,'');
-        return simp === '0' || /^0(\*.*)?$/.test(simp)
-      }catch{ return false }
-    }
-
-    function checkGeneralSolution(userRaw){
-      const userSan = sanitizeBasic(userRaw);
-      const user = normalizeToPlain(userSan);
-      if(!user){ return false }
-
-      try{
-        const g = math.simplify(`(${user}) - (${basePart})`);
-        const h = math.simplify(`(${g.toString()}) / (${fundamental})`);
-        const hStr = h.toString();
-        const hNode = math.parse(hStr);
-        if (dependsOnX(hNode)) return false;     // חייב להיות קבוע
-        if (trySymbolicZero(hStr)) return false; // לא פתרון פרטי
-        if (!hasFreeParamSymbolFromNode(hNode)) return false; // חייב להיות פרמטר חופשי
-        return true;
-      }catch{ return false }
-    }
-
-    function checkSatisfiesODE(userRaw){
-      const user = normalizeToPlain(userRaw);
-      if(!user) return false;
-      try{
-        const du = math.derivative(user,'x').toString();
-        const expr = `(${du}) - (${user}) + x`;
-        return trySymbolicZero(expr);
-      }catch{ return false }
-    }
-
-    let correctExprPlain = "x + 1";
-    function checkExact(userRaw){
-      const user = normalizeToPlain(userRaw);
-      if(!user || !correctExprPlain) return false;
-      return trySymbolicZero(`(${user}) - (${correctExprPlain})`);
-    }
-
-    // ===== events =====
-    inputEl.addEventListener('input', ()=>debounce(process,120));
-    forceLatexEl.addEventListener('change', process);
-
-    btnClear.addEventListener('click', ()=>{
-      inputEl.value='';
-      document.getElementById('render').innerHTML='';
-      setStatus('');
-      document.getElementById('checkMsg').textContent='';
-      inputEl.focus();
-    });
-
-    btnCheck.addEventListener('click', ()=>{
-      const raw0 = inputEl.value;
-      const raw = sanitizeBasic(raw0);
-      const latexMode = looksLikeLatex(raw) && !forceLatexEl.checked;
+  // רינדור תיבה למטה
+  let debTimer=null; function debounce(fn,ms=180){ clearTimeout(debTimer); debTimer=setTimeout(fn,ms) }
+  async function process(){
+    const raw0 = inputEl.value, raw = sanitizeBasic(raw0);
+    if(!raw){ document.getElementById('render').innerHTML=''; setStatus('',''); return }
+    const forced = forceLatexEl.checked, latexMode = forced || looksLikeLatex(raw);
+    try{
       if(latexMode){
-        document.getElementById('checkMsg').className = 'status bad';
-        document.getElementById('checkMsg').textContent = 'בדיקת נכונות פועלת בקלט Plain';
-        return;
+        await renderLatexTo('render', raw, true);
+        setStatus('מעובד במצב LaTeX', 'ok');
+      }else{
+        const plain = normalizeToPlain(raw);
+        const node = math.parse(plain);
+        const latex = node.toTex({ parenthesis:'keep', implicit:'show' });
+        await renderLatexTo('render', latex, true);
+        setStatus('מעובד במצב Plain → LaTeX באמצעות mathjs', 'ok');
       }
-      const mode = checkModeEl.value;
-      let ok=false;
-      if(mode==='general') ok=checkGeneralSolution(raw0);
-      else if(mode==='ode') ok=checkSatisfiesODE(raw0);
-      else ok=checkExact(raw0);
-
-      const el = document.getElementById('checkMsg');
-      el.className = 'status ' + (ok?'ok':'bad');
-      el.textContent = ok ? 'תשובה נכונה' : 'תשובה לא נכונה';
-    });
-
-    // ===== שאלה ותצוגת התחלה =====
-    async function setProblem(textOrLatex, isLatex=true){
-      if(isLatex) await renderLatexTo('problemRender', textOrLatex, true);
-      else document.getElementById('problemRender').innerHTML = `<div>${escapeHtml(textOrLatex)}</div>`;
+    }catch(err){
+      document.getElementById('render').innerHTML =
+        `<div class="monospace">שגיאה בעיבוד\n${(err?.message||String(err))}\n\nקלט\n${raw}</div>`;
+      setStatus('שגיאה בעיבוד — לבדוק תחביר', 'bad');
     }
+  }
 
-    setProblem(String.raw`y' = y - x\quad \text{מצאו את הפתרון הכללי}`);
-    inputEl.value = String.raw`y = C_1 e^{2x}\sin x + C_2 e^{2x}\cos x + x^{2} - 3x + 5`;
-    process();
+  // ===== checker =====
+  const basePart = "x + 1";
+  const fundamental = "exp(x)";
+  function dependsOnX(node){let dep=false; node.traverse(n=>{ if(n.isSymbolNode&&n.name==='x') dep=true}); return dep}
+  function hasFreeParamSymbolFromNode(node){
+    let has=false; node.traverse(n=>{ if(n.isSymbolNode){const nm=n.name; if(nm!=='x'&&nm!=='e'&&nm!=='pi') has=true} }); return has
+  }
+  function trySymbolicZero(expr){ try{const s=math.simplify(expr).toString().replace(/\s+/g,''); return s==='0'||/^0(\*.*)?$/.test(s)}catch{return false} }
+  function checkGeneralSolution(userRaw){
+    const user = normalizeToPlain(userRaw); if(!user) return false;
+    try{
+      const g = math.simplify(`(${user}) - (${basePart})`);
+      const h = math.simplify(`(${g.toString()}) / (${fundamental})`);
+      const hStr = h.toString(), hNode = math.parse(hStr);
+      if (dependsOnX(hNode)) return false;
+      if (trySymbolicZero(hStr)) return false;
+      if (!hasFreeParamSymbolFromNode(hNode)) return false;
+      return true;
+    }catch{ return false }
+  }
+  function checkSatisfiesODE(userRaw){
+    const user = normalizeToPlain(userRaw); if(!user) return false;
+    try{
+      const du = math.derivative(user,'x').toString();
+      const expr = `(${du}) - (${user}) + x`;
+      return trySymbolicZero(expr);
+    }catch{ return false }
+  }
+  let correctExprPlain = "x + 1";
+  function checkExact(userRaw){
+    const user = normalizeToPlain(userRaw); if(!user||!correctExprPlain) return false;
+    return trySymbolicZero(`(${user}) - (${correctExprPlain})`);
+  }
+
+  // אירועים
+  inputEl.addEventListener('input', ()=>debounce(process,120));
+  forceLatexEl.addEventListener('change', process);
+  document.getElementById('btnClear').addEventListener('click', ()=>{
+    inputEl.value=''; document.getElementById('render').innerHTML=''; setStatus('','');
+    document.getElementById('checkMsg').textContent=''; inputEl.focus();
   });
-}
+  document.getElementById('btnCheck').addEventListener('click', ()=>{
+    const raw0 = inputEl.value, raw = sanitizeBasic(raw0);
+    const latexMode = looksLikeLatex(raw) && !forceLatexEl.checked;
+    const el = document.getElementById('checkMsg');
+    if(latexMode){ el.className='status bad'; el.textContent='בדיקת נכונות פועלת בקלט Plain'; return }
+    const mode = checkModeEl.value;
+    let ok=false;
+    if(mode==='general') ok=checkGeneralSolution(raw0);
+    else if(mode==='ode') ok=checkSatisfiesODE(raw0);
+    else ok=checkExact(raw0);
+    el.className='status ' + (ok?'ok':'bad'); el.textContent = ok ? 'תשובה נכונה' : 'תשובה לא נכונה';
+  });
+
+  // שאלה + תיבות תצוגה
+  renderLatexTo('problemRender', String.raw`y' = y - x\quad \text{מצאו את הפתרון הכללי}`, true);
+  renderLatexTo('solutionBox', String.raw`y = x + 1 + C e^{x}`, true);
+  inputEl.value = String.raw`y = C_1 e^{2x}\sin x + C_2 e^{2x}\cos x + x^{2} - 3x + 5`;
+  process();
+});
 </script>
 </body>
 </html>
