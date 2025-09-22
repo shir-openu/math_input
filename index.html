@@ -235,6 +235,7 @@ LaTeX:  y = x + 1 + C e^{x}"></textarea>
           • בדיקת נכונות פועלת בקלט Plain  
           • "פתרון כללי" לדוגמה כאן: \(y = x + 1 + C e^{x}\)  
           • ניתן להשתמש ב: C*exp(x), C*e^x, או Ce^x
+          • תמיכה בקבועים: A, B, C, D, K וכן C_1, C_2, D_1, D_2 וכו'
           • אין הצגת פתרון אמיתי במסך
         </div>
       </section>
@@ -294,9 +295,16 @@ if (!window.exerciseInitialized) {
     }
 
     function insertImplicitMult(s) {
-      s = s.replace(/([CcKkAa])(?=\s*(?:x\b|\())/g, '$1*');
-      s = s.replace(/([CcKkAa])(?=\s*(?:e\b))/g, '$1*');
-      s = s.replace(/([CcKkAa])(?=\s*(?:sin|cos|tan|exp|log|ln|sqrt)\b)/g, '$1*');
+      // קבועים בסיסיים - אותיות בודדות
+      s = s.replace(/([A-Z])(?=\s*(?:x\b|\())/g, '$1*');
+      s = s.replace(/([A-Z])(?=\s*(?:e\b))/g, '$1*');
+      s = s.replace(/([A-Z])(?=\s*(?:sin|cos|tan|exp|log|ln|sqrt)\b)/g, '$1*');
+      
+      // קבועים עם אינדקסים כמו C_1, D_2
+      s = s.replace(/([A-Z])(_[0-9]+)(?=\s*(?:x\b|\())/g, '$1$2*');
+      s = s.replace(/([A-Z])(_[0-9]+)(?=\s*(?:e\b))/g, '$1$2*');
+      s = s.replace(/([A-Z])(_[0-9]+)(?=\s*(?:sin|cos|tan|exp|log|ln|sqrt)\b)/g, '$1$2*');
+      
       return s;
     }
 
@@ -400,7 +408,11 @@ if (!window.exerciseInitialized) {
       node.traverse(n => {
         if (n.isSymbolNode) {
           const nm = n.name;
-          if (nm !== 'x' && nm !== 'e' && nm !== 'pi') has = true;
+          // כל אות שאינה x, e, pi נחשבת פרמטר חופשי
+          if (nm !== 'x' && nm !== 'e' && nm !== 'pi') {
+            // גם אם יש אינדקס כמו C_1, D_2 - זה עדיין פרמטר חופשי
+            has = true;
+          }
         }
       });
       return has;
@@ -504,7 +516,7 @@ if (!window.exerciseInitialized) {
       }
 
       setCheckMsg(
-        ok ? 'התשובה נכונה לפי התשובה האמיתית' : 'התשובה אינה נכונה לפי התשובה האמיתית',
+        ok ? 'התשובה נכונה' : 'התשובה אינה נכונה',
         ok ? 'ok' : 'bad'
       );
     });
@@ -519,7 +531,7 @@ if (!window.exerciseInitialized) {
     }
 
     // Set up the problem and default input
-    setProblem(String.raw`\textbf{פתרו}\quad y' = y - x\quad \text{מצאו את הפתרון הכללי}`);
+    setProblem(String.raw`y' = y - x\quad \text{מצאו את הפתרון הכללי}`);
     inputEl.value = "y = x + 1 + C*exp(x)";
     process();
   });
