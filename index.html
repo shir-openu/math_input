@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>קלט מתמטי → תצוגה יפה (MathJax + mathjs)</title>
+
+  <!-- MathJax v3: רנדרינג LaTeX -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(','\\)'],['$','$']],
+        displayMath: [['\\[','\\]']],
+        packages: {'[+]': ['noerrors','noundefined']}
+      },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] },
+      loader: { load: ['[tex]/noerrors','[tex]/noundefined'] },
+      chtml: { scale: 1.02, mtextInheritFont: true }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+  <!-- mathjs: המרה מקלט “רגיל” ל-LaTeX -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjs@13.0.2/lib/browser/math.js"></script>
+
+  <style>
+    :root{
+      --bg:#0e1424; --panel:#111827; --ink:#e5e7eb; --muted:#9aa6b2; --accent:#60a5fa; --warn:#f59e0b; --bad:#ef4444; --ok:#34d399;
+      --field:#1f2a3a; --ring:#334155;
+    }
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans",sans-serif}
+    .wrap{max-width:1000px;margin:0 auto;padding:20px}
+    h1{font-size:1.35rem;margin:0 0 12px}
+    .card{background:var(--panel);border:1px solid var(--ring);border-radius:14px;padding:14px 16px}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .col{flex:1 1 380px;min-width:300px}
+    label{font-size:.92rem;color:var(--muted)}
+    textarea, input[type="text"]{
+      width:100%;box-sizing:border-box;background:var(--field);color:var(--ink);
+      border:1px solid var(--ring);border-radius:12px;padding:10px 12px;font-size:1rem;line-height:1.5;
+      outline:none
+    }
+    textarea:focus, input[type="text"]:focus{border-color:var(--accent)}
+    .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ring);background:var(--field);
+      padding:6px 10px;border-radius:999px;font-size:.9rem;color:var(--ink)
+    }
+    .status{font-size:.9rem;margin-top:6px}
+    .status.ok{color:var(--ok)}
+    .status.warn{color:var(--warn)}
+    .status.bad{color:var(--bad)}
+    .render{
+      background:#0b1020;border:1px dashed #243047;border-radius:12px;padding:14px 16px;min-height:96px;overflow:auto
+    }
+    .monospace{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+    .hint{color:var(--muted);font-size:.9rem;margin-top:8px}
+    .btn{cursor:pointer;background:var(--field);border:1px solid var(--ring);color:var(--ink);padding:8px 12px;border-radius:10px}
+    .btn:hover{border-color:var(--accent)}
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--ring);background:var(--field);font-size:.8rem;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>מקלידים מתמטיקה → מוצג יפה</h1>
+
+    <div class="card">
+      <div class="row">
+        <div class="col">
+          <label for="inputRaw">קלט (Plain או LaTeX):</label>
+          <textarea id="inputRaw" rows="6" placeholder="דוגמאות:
+Plain:  2*sin(x)^2/(x+1), ln(x), exp(x), sqrt(1-x^2)
+LaTeX:  \int_0^1 \frac{\sin x}{x}\,dx, \sum_{n=1}^\infty \frac{1}{n^2}"></textarea>
+
+          <div class="controls">
+            <span class="pill"><input type="checkbox" id="forceLatex"> <label for="forceLatex" style="margin:0">להכריח מצב LaTeX</label></span>
+            <button class="btn" id="btnClear">ניקוי</button>
+            <span class="badge" id="modeBadge">זיהוי מצב: auto</span>
+          </div>
+
+          <div id="status" class="status"></div>
+          <div class="hint">
+            • אינטגרלים/סכומים: העדיפו קלט <strong>LaTeX</strong> (למשל: <span class="monospace">\\int</span>, <span class="monospace">\\sum</span>).<br/>
+            • קלט “רגיל” תומך: <span class="monospace">sin, cos, tan, asin, acos, atan, ln, log, exp, sqrt, pi, e</span> ועוד. <br/>
+            • בפורמט “רגיל” המרה אוטומטית של <strong>פסיקים עשרוניים</strong> לנקודות: <span class="monospace">2,5</span> → <span class="monospace">2.5</span>.
+          </div>
+        </div>
+
+        <div class="col">
+          <label>תצוגה:</label>
+          <div id="render" class="render"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Utilities ---
+    const rtlMarks = /[\u200E\u200F\u202A-\u202E\u2066-\u2069]/g; // הסרת סימני כיווניות נסתרים
+
+    function sanitizeBasic(s){
+      return (s || '').replace(rtlMarks,'').trim();
+    }
+
+    // המרת פסיקים עשרוניים לנקודות רק כאשר לא בתוך פקודות LaTeX
+    function commaDecimalToDot(s){
+      // החלפה זהירה: מספר,פסיק,מספר → נקודה (למשל 3,14 → 3.14)
+      return s.replace(/(\d),(\d)/g, '$1.$2');
+    }
+
+    // זיהוי האם הקלט נראה כמו LaTeX
+    function looksLikeLatex(s){
+      return /\\[a-zA-Z]+|\\\[|\\\]|\\\(|\\\)|\$(?!\s*$)|\\int|\\sum|\\frac|\\sqrt/.test(s);
+    }
+
+    // רינדור MathJax
+    async function renderLatex(latex, display=true){
+      const container = document.getElementById('render');
+      const wrapped = display ? `\\[ ${latex} \\]` : `\\(${latex}\\)`;
+      container.innerHTML = wrapped;
+      if (window.MathJax && MathJax.typesetPromise) {
+        try{
+          await MathJax.typesetPromise([container]);
+        }catch(e){
+          // במקרה קצה, מציגים טקסט גולמי
+          container.innerHTML = `<div class="monospace">${escapeHtml(latex)}</div>`;
+        }
+      }
+    }
+
+    function escapeHtml(str){
+      return (str||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function setStatus(msg, cls){
+      const el = document.getElementById('status');
+      el.className = `status ${cls||''}`;
+      el.textContent = msg || '';
+    }
+
+    function setModeBadge(text){
+      document.getElementById('modeBadge').textContent = `זיהוי מצב: ${text}`;
+    }
+
+    // --- Core processing ---
+    const inputEl = document.getElementById('inputRaw');
+    const forceLatexEl = document.getElementById('forceLatex');
+    const btnClear = document.getElementById('btnClear');
+
+    let debTimer = null;
+    function debounce(fn, ms=180){
+      clearTimeout(debTimer);
+      debTimer = setTimeout(fn, ms);
+    }
+
+    async function process(){
+      const raw0 = inputEl.value;
+      const raw = sanitizeBasic(raw0);
+
+      if(!raw){
+        document.getElementById('render').innerHTML = '';
+        setStatus('', '');
+        setModeBadge('auto');
+        return;
+      }
+
+      const forced = forceLatexEl.checked;
+      const latexMode = forced || looksLikeLatex(raw);
+
+      setModeBadge(latexMode ? (forced ? 'LaTeX (כפוי)' : 'LaTeX (זוהה)') : 'Plain (זוהה)');
+
+      try{
+        if(latexMode){
+          // מצב LaTeX: אין המרת פסיקים; מציגים ישירות
+          await renderLatex(raw, true);
+          setStatus('מעובד במצב LaTeX.', 'ok');
+        }else{
+          // מצב Plain: המרת פסיקים עשרוניים + המרה ל-LaTeX דרך mathjs
+          const plain = commaDecimalToDot(raw);
+          // parse & toTex
+          const node = math.parse(plain);
+          const latex = node.toTex({parenthesis:'keep', implicit:'show'});
+          await renderLatex(latex, true);
+          setStatus('מעובד במצב Plain → LaTeX (mathjs).', 'ok');
+        }
+      }catch(err){
+        // שגיאה: מציגים הודעה + קלט גולמי לצורך דיבוג
+        document.getElementById('render').innerHTML =
+          `<div class="monospace">שגיאה בעיבוד:\n${escapeHtml(err && err.message ? err.message : String(err))}\n\nקלט:\n${escapeHtml(raw)}</div>`;
+        setStatus('שגיאה בעיבוד — בדקי את התחביר. לאינטגרלים/סכומים השתמשי ב-LaTeX.', 'bad');
+      }
+    }
+
+    // מאזינים
+    inputEl.addEventListener('input', ()=>debounce(process, 120));
+    forceLatexEl.addEventListener('change', process);
+    btnClear.addEventListener('click', ()=>{
+      inputEl.value = '';
+      document.getElementById('render').innerHTML = '';
+      setStatus('', '');
+      setModeBadge('auto');
+      inputEl.focus();
+    });
+
+    // דוגמה התחלתית קטנה
+    inputEl.value = "2*sin(x)^2/(x+1)";
+    process();
+  </script>
+</body>
+</html>
