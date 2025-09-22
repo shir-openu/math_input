@@ -85,8 +85,9 @@
 
     <!-- Tabs header -->
     <div class="tabs" role="tablist" aria-label="ניווט לשוניות">
-      <button class="tab-btn" role="tab" aria-selected="true" aria-controls="tab-ex" id="tabbtn-ex">תרגיל</button>
-      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-hint" id="tabbtn-hint">רמז</button>
+      <button class="tab-btn" role="tab" aria-selected="true" aria-controls="tab-ex"   id="tabbtn-ex">תרגיל</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-h1"  id="tabbtn-h1">רמז 1</button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-h2"  id="tabbtn-h2">רמז 2</button>
       <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-sol" id="tabbtn-sol">הצגת הפתרון</button>
     </div>
 
@@ -115,8 +116,6 @@ y = C_1 e^{2x}\sin x + C_2 e^{2x}\cos x + x^{2} - 3x + 5"></textarea>
             <span class="pill">מצב בדיקה
               <select id="checkMode">
                 <option value="general" selected>פתרון כללי</option>
-                <option value="exact">ביטוי מדויק</option>
-                <option value="ode">מספק את המשוואה</option>
               </select>
             </span>
           </div>
@@ -137,16 +136,28 @@ y = C_1 e^{2x}\sin x + C_2 e^{2x}\cos x + x^{2} - 3x + 5"></textarea>
       </div>
     </section>
 
-    <!-- Panel: רמז -->
-    <section class="tab-panel" id="tab-hint" role="tabpanel" aria-labelledby="tabbtn-hint">
+    <!-- Panel: רמז 1 -->
+    <section class="tab-panel" id="tab-h1" role="tabpanel" aria-labelledby="tabbtn-h1">
       <div class="card">
-        <div class="section-title">רמז</div>
+        <div class="section-title">רמז 1</div>
         <div class="hint">
           זוהי משוואה לינארית אי־הומוגנית מסדר ראשון.<br/>
           הביאו לצורה הבאה: \(y' - y = -x\).<br/>
           השתמשו בגורם אינטגרציה: \(\mu(x)=e^{\int -1\,dx}=e^{-x}\).<br/>
-          הכפילו ב-\(e^{-x}\) וקבלו: \(\big(e^{-x}y\big)' = -x e^{-x}\).<br/>
-          שלבו וּבודדו את \(y\).
+          הכפילו ב-\(e^{-x}\) וקבלו את הזהות הדיפרנציאלית: \(\big(e^{-x}y\big)' = -x e^{-x}\).<br/>
+          נסו להמשיך מפה או עברו ללשונית "רמז 2".
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel: רמז 2 -->
+    <section class="tab-panel" id="tab-h2" role="tabpanel" aria-labelledby="tabbtn-h2">
+      <div class="card">
+        <div class="section-title">רמז 2</div>
+        <div class="hint">
+          שלבו את שני האגפים: \(\displaystyle e^{-x}y = \int -x e^{-x}\,dx\).<br/>
+          בצעו אינטגרציה בחלקים (או טבלת חלקים) לקבלת \((x+1)e^{-x} + C\).<br/>
+          בידדו את \(y\) על־ידי הכפלה ב-\(e^{x}\).
         </div>
       </div>
     </section>
@@ -268,7 +279,7 @@ waitForLibraries(function(){
     }
   }
 
-  // ===== checker =====
+  // ===== checker: פתרון כללי בלבד =====
   const basePart = "x + 1";
   const fundamental = "exp(x)";
   function dependsOnX(node){let dep=false; node.traverse(n=>{ if(n.isSymbolNode&&n.name==='x') dep=true}); return dep}
@@ -288,41 +299,26 @@ waitForLibraries(function(){
       return true;
     }catch{ return false }
   }
-  function checkSatisfiesODE(userRaw){
-    const user = normalizeToPlain(userRaw); if(!user) return false;
-    try{
-      const du = math.derivative(user,'x').toString();
-      const expr = `(${du}) - (${user}) + x`;
-      return trySymbolicZero(expr);
-    }catch{ return false }
-  }
-  let correctExprPlain = "x + 1";
-  function checkExact(userRaw){
-    const user = normalizeToPlain(userRaw); if(!user||!correctExprPlain) return false;
-    return trySymbolicZero(`(${user}) - (${correctExprPlain})`);
-  }
 
   // אירועים
   inputEl.addEventListener('input', ()=>debounce(process,120));
   forceLatexEl.addEventListener('change', process);
+
   document.getElementById('btnClear').addEventListener('click', ()=>{
     inputEl.value=''; document.getElementById('render').innerHTML=''; setStatus('','');
     document.getElementById('checkMsg').textContent=''; inputEl.focus();
   });
+
   document.getElementById('btnCheck').addEventListener('click', ()=>{
     const raw0 = inputEl.value, raw = sanitizeBasic(raw0);
     const latexMode = looksLikeLatex(raw) && !forceLatexEl.checked;
     const el = document.getElementById('checkMsg');
     if(latexMode){ el.className='status bad'; el.textContent='בדיקת נכונות פועלת בקלט Plain'; return }
-    const mode = checkModeEl.value;
-    let ok=false;
-    if(mode==='general') ok=checkGeneralSolution(raw0);
-    else if(mode==='ode') ok=checkSatisfiesODE(raw0);
-    else ok=checkExact(raw0);
+    const ok = checkGeneralSolution(raw0);
     el.className='status ' + (ok?'ok':'bad'); el.textContent = ok ? 'תשובה נכונה' : 'תשובה לא נכונה';
   });
 
-  // שאלה + תיבות תצוגה
+  // תוכן ראשוני
   renderLatexTo('problemRender', String.raw`y' = y - x\quad \text{מצאו את הפתרון הכללי}`, true);
   renderLatexTo('solutionBox', String.raw`y = x + 1 + C e^{x}`, true);
   inputEl.value = String.raw`y = C_1 e^{2x}\sin x + C_2 e^{2x}\cos x + x^{2} - 3x + 5`;
