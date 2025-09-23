@@ -374,5 +374,30 @@ waitForLibraries(function(){
   loadProblem(0);
 });
 </script>
+  (function () {
+  function sendHeight() {
+    const h = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
+    parent.postMessage({ type: 'odeSize', h }, '*');
+  }
+
+  // פעם ראשונה
+  window.addEventListener('load', sendHeight);
+
+  // כשיש שינויים בפריסה/תוכן
+  new ResizeObserver(sendHeight).observe(document.body);
+
+  // אחרי רינדור MathJax (אם קיים)
+  if (window.MathJax?.typesetPromise) {
+    MathJax.typesetPromise().then(sendHeight).catch(()=>{});
+  }
+
+  // גיבוי קליל
+  window.addEventListener('resize', sendHeight);
+  setTimeout(sendHeight, 400);
+})();
+
 </body>
 </html>
